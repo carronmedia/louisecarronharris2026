@@ -1,0 +1,17 @@
+{
+  "name": "louise-carron-harris",
+  "version": "0.1.0",
+  "description": "Ollie child theme for louisecarronharris.com.",
+  "private": true,
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "format": "wp-scripts format",
+    "lint:js": "wp-scripts lint-js",
+    "lint:style": "wp-scripts lint-style"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^31.3.0"
+  }
+}

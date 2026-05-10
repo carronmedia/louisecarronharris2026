@@ -1,0 +1,36 @@
+name: PHPCodeSniffer
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  phpcs:
+    name: Run PHP Code Sniffer
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # for checkout to fetch code
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          tools: phpcs
+          php-version: 8.2
+
+      - name: Calculate Changed PHP Files
+        id: changed-files
+        uses: tj-actions/changed-files@v47 # v47
+        with:
+          files: |
+            **/*.php
+
+      - name: Run PHP Code Sniffer
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          composer install --prefer-dist --working-dir=wp-content/themes/louise-carron-harris
+          wp-content/themes/louise-carron-harris/vendor/bin/phpcs --standard=wp-content/themes/louise-carron-harris/phpcs.xml.dist ${{ steps.changed-files.outputs.all_changed_and_modified_files }} || exit 1

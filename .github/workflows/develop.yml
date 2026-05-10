@@ -1,0 +1,38 @@
+name: Deploy to WP Engine
+on:
+  push:
+    branches:
+     - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v5
+      with:
+        cache: 'npm'
+        cache-dependency-path: wp-content/themes/louise-carron-harris/package-lock.json
+
+    - name: Install dependencies
+      run: |
+        cd wp-content/themes/louise-carron-harris
+        npm ci
+
+    - name: Build theme
+      run: |
+        cd wp-content/themes/louise-carron-harris
+        npm run build
+
+    - name: Clean up theme assets
+      run: |
+        cd wp-content/themes/louise-carron-harris
+        rm -rf node_modules/
+        rm -rf vendor/
+
+    - name: GitHub Action Deploy to WP Engine
+      uses: wpengine/github-action-wpe-site-deploy@v3
+      with:
+        WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+        WPE_ENV: lchdevtemp

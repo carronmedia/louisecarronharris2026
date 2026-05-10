@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "wordpress-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "@automattic/mcp-wordpress-remote@latest"],
+      "env": {
+        "WP_API_URL": "https://louise-carron-harris-2026.local/wp-json/mcp/mcp-adapter-default-server",
+        "WP_API_USERNAME": "YOUR_WP_USERNAME",
+        "WP_API_PASSWORD": "YOUR_APPLICATION_PASSWORD",
+        "LOG_FILE": "/tmp/lch-mcp-wordpress.log",
+        "NODE_TLS_REJECT_UNAUTHORIZED": "0"
+      }
+    }
+  }
+}
