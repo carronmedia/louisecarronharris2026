@@ -14,6 +14,16 @@ From-scratch WordPress rebuild of **louisecarronharris.com** (Louise Carron Harr
 - **Design**: produced in Figma in parallel; tokens and components translate into the child's `theme.json` and template parts.
 - **Content migration (future)**: plan is to install `@automattic/mcp-wordpress-remote` on the live site so Claude can pull posts/pages/media via MCP instead of SQL export/import. Not set up yet.
 
+## Brand & design references
+
+**Long-term source of truth — `wp-content/themes/louise-carron-harris/docs/brand-guidelines.md`** (tracked).
+The authoritative record of brand decisions: typography, color, spacing, voice, etc. Update it whenever a brand decision is made. When proposing tokens, components, copy patterns, or visuals, default to what's recorded here.
+
+**Setup-phase only — `.docs/Website-Analysis-LouiseCarronHarris.docx`** (gitignored, user's machine only).
+A March 2026 Conversion / SEO / AEO analysis used to seed direction during initial setup. Will be retired once `brand-guidelines.md` covers the same ground. Where it conflicts with `brand-guidelines.md`, `brand-guidelines.md` wins.
+
+To read the `.docx`: `textutil -convert txt -output .docs/Website-Analysis-LouiseCarronHarris.txt .docs/Website-Analysis-LouiseCarronHarris.docx`, then `Read` the `.txt`. Both files are gitignored.
+
 ## Repo shape
 
 This directory is the WordPress webroot of a Local by Flywheel site (`louise-carron-harris-2026`). It contains a full WordPress install on disk, but `.gitignore` excludes nearly all of it — **only the custom theme, GitHub workflows, and root config files are meant to be tracked**. Specifically, the following are intentionally ignored and should not be committed or modified for project work:
