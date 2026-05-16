@@ -47,12 +47,13 @@ define( 'WP_ENVIRONMENT_TYPE', 'local' );
 define( 'WP_DEBUG', true );
 ```
 
-### 4. Start the site & install themes via wp-admin
+### 4. Start the site & activate the theme
 
 Start the site in Local, then **Open site → wp-admin**:
 
-- **Install Ollie** (parent): Appearance → Themes → Add New → search "Ollie" by Mike McAlister → Install. **Don't activate Ollie itself** — it's only the parent.
-- **Activate the child**: Appearance → Themes → "Louise Carron Harris" → Activate.
+- **Activate the theme**: Appearance → Themes → "Louise Carron Harris" → Activate.
+
+The theme is standalone — no parent is needed. (Until 2026-05-16 it was a child of Ollie; the parent was dropped once the child was overriding ~95% of Ollie's tokens and using none of its templates. If `wp-content/themes/ollie/` still exists on disk from earlier setup, you can leave it there for reference or remove it via Appearance → Themes → Delete.)
 
 ### 5. Install theme dependencies
 
@@ -66,7 +67,7 @@ composer install
 npm install
 ```
 
-You should now be able to load the local site URL (set by Local — typically `https://<site-name>.local`) and see Ollie's default templates rendering through the child theme.
+You should now be able to load the local site URL (set by Local — typically `https://<site-name>.local`) and see the theme rendering. The theme provides its own fallback templates (`index.html`, `single.html`, `page.html`, `archive.html`, `404.html`, `search.html`); these are intentionally minimal during the rebuild and get refined per page during the template rollout phase.
 
 ## Daily workflows
 
@@ -107,7 +108,6 @@ If something looks "missing" after cloning, check this list before assuming a bu
 - **`wp-config.php`** — environment-specific, never committed.
 - **Default WP themes** (`twentytwentyfive`, etc.) — bundled with WP, not project code.
 - **Plugins** (`wp-content/plugins/*`) — managed in production by WP Engine's Smart Plugin Manager.
-- **Ollie parent theme** (`wp-content/themes/ollie/`) — installed via wp-admin or by WP Engine on production.
 - **`wp-content/uploads/`** — media lives in production / per-environment storage.
 - **`build/` inside the child theme** — compiled at deploy time by `npm run build`; never committed.
 
@@ -115,13 +115,28 @@ If something looks "missing" after cloning, check this list before assuming a bu
 
 Most-recent first. Add a dated entry whenever scope, tooling, or workflow changes — keep entries short.
 
+### 2026-05-16
+- **Ollie parent dropped.** Theme is now standalone. The child was overriding ~95% of Ollie's `theme.json` and using none of its templates — the parent layer added complexity for negligible value. `style.css` `Template: ollie` line removed.
+- **Phase 0 housekeeping** — CLAUDE.md, ONBOARDING.md, brand-guidelines.md updated.
+- **Locked tokens (rebuild kickoff):**
+  - Display font — **Bodoni Moda** (replaces Bodoni Seventy Two ITC TT used on the live site).
+  - Body font — **Montserrat** (unchanged).
+  - Script font — **Mellow Morning Script**, retained for narrow use (signature / one-off display phrases / pull-quote attribution). Placements TBD.
+  - **Orange `#f26431` dropped.** CTA accent decided later, visually, against a real homepage hero composition. Candidates: forest green `#2F5233`, burnt copper `#A85D2B`, aubergine `#5B2A45`. Buttons render navy in the interim.
+  - **Palette consolidated** per `brand-guidelines.md`. Live-site slots `secondary-copy`, `highlight`, `light-gold`, `ghost-white`, `grey`, `header` absorbed into the new slug system, not preserved.
+- **IA** — `docs/sitemap.md` reset to draft. Top-level nav redesigned together this session: Home / Offerings / Learn / About / Contact + utility. Subject to review against live-content inventory in Phase 1.
+- **Commerce model** — theme is commerce-agnostic. No on-site checkout. Each offering page has an editable CTA slot (URL + label per page) so we can soft-launch on Kajabi/Calendly and migrate later without rebuilding.
+- **Phase 1 setup task** — install `@automattic/wordpress-mcp` on production louisecarronharris.com (separate from the local-site MCP setup) so Claude can read existing content during the rebuild.
+- **Figma file:** `https://www.figma.com/design/Si1G6Uc40aWBe8CEFlhHvg/Louise-Carron-Harris` — empty canvas at start. Tokens, wireframes, and hi-fi pages built alongside the code.
+- **Drawing approach** — tokens first (Figma design-system frame from locked code tokens) → low-fi wireframes (Home + canonical offering) → hi-fi homepage with three CTA-accent variants on the hero → lock accent → code builds in parallel from day 1.
+
 ### 2026-05-10
 - Repo initialised on `main` (no commits yet).
-- Locked decisions: Ollie as parent, child theme slug `louise-carron-harris`, FSE-first customization (`theme.json` + template parts), Figma in parallel for design.
-- Scaffolded `wp-content/themes/louise-carron-harris/` with `style.css` (manifest declaring `Template: ollie`), `theme.json`, `functions.php`, `composer.json`, `phpcs.xml.dist`.
+- Locked decisions (parent-theme decision since superseded — see 2026-05-16): Ollie as parent, child theme slug `louise-carron-harris`, FSE-first customization (`theme.json` + template parts), Figma in parallel for design.
+- Scaffolded `wp-content/themes/louise-carron-harris/` with `style.css` (manifest), `theme.json`, `functions.php`, `composer.json`, `phpcs.xml.dist`.
 - `.github/workflows/develop.yml` retargeted at the new theme path; `WPE_ENV` set to `lchdevtemp`. Build step kept (npm ci + build + cleanup); plan is to use `@wordpress/scripts`.
 - `.github/workflows/phpcs.yml` retargeted at the new theme path.
-- `.gitignore` updated to allow the child theme's `style.css` (the WP theme manifest is hand-authored, not built).
+- `.gitignore` updated to allow the theme's `style.css` (the WP theme manifest is hand-authored, not built).
 - Built assets (`build/`) excluded from the repo and produced at deploy time.
 - Wired up the [Automattic WordPress MCP server](https://github.com/Automattic/wordpress-mcp) for the local site: committed `.mcp.json.example` updated with the project hostname; per-developer `.mcp.json` (gitignored) holds the real application password and is enabled in `.claude/settings.local.json`. Requires the WordPress MCP plugin to be installed and active on the local site, plus a Claude Code session restart to pick up the server.
 - Open: install `@wordpress/scripts` and commit both `package.json` and `package-lock.json` (CI's `npm ci` + setup-node cache require the lockfile).

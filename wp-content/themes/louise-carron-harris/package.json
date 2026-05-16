@@ -1,7 +1,7 @@
 {
   "name": "louise-carron-harris",
   "version": "0.1.0",
-  "description": "Ollie child theme for louisecarronharris.com.",
+  "description": "Standalone FSE block theme for louisecarronharris.com.",
   "private": true,
   "license": "GPL-2.0-or-later",
   "scripts": {

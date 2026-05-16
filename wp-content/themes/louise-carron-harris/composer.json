@@ -1,6 +1,6 @@
 {
 	"name": "louise-carron-harris",
-	"description": "Child theme of Ollie for louisecarronharris.com.",
+	"description": "Standalone FSE block theme for louisecarronharris.com.",
 	"type": "wordpress-theme",
 	"license": "GPL-2.0-or-later",
 	"require": {
